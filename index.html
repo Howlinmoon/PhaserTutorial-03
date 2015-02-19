@@ -44,7 +44,7 @@ body {
 			game.physics.enable(this.tank, Phaser.Physics.ARCADE);
 			this.tank.body.immovable = false;
 			this.tank.body.collideWorldBounds = true;
-			this.tank.body.bounce.setTo(.25, .25);
+			this.tank.body.bounce.setTo(0, 0);
 
 			this.tank.angle = game.rnd.angle();
 
@@ -84,8 +84,7 @@ body {
 
 			var distanceFromPlayer = this.game.physics.arcade.distanceBetween(this.tank, this.player);
 			console.log("Tank Number: "+this.tank.name+" is this far from the player: "+distanceFromPlayer);
-			if (this.game.physics.arcade
-					.distanceBetween(this.tank, this.player) < 300) {
+			if (distanceFromPlayer < 300) {
 				if (this.game.time.now > this.nextFire
 						&& this.bullets.countDead() > 0) {
 					this.nextFire = this.game.time.now + this.fireRate;
@@ -95,7 +94,7 @@ body {
 					bullet.reset(this.turret.x, this.turret.y);
 
 					bullet.rotation = this.game.physics.arcade.moveToObject(
-							bullet, this.player, 500);
+							bullet, this.player, 10);
 				}
 			}
 

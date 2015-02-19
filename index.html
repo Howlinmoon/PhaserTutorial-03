@@ -21,10 +21,10 @@ body {
 			var y = game.world.randomY;
 
 			this.game = game;
-			this.health = 3;
+			this.health = 300;
 			this.player = player;
 			this.bullets = bullets;
-			this.fireRate = 1000;
+			this.fireRate = 100;
 			this.nextFire = 0;
 			this.alive = true;
 
@@ -176,8 +176,8 @@ body {
 			//  Create some baddies to waste :)
 			enemies = [];
 
-			enemiesTotal = 20;
-			enemiesAlive = 20;
+			enemiesTotal = 40;
+			enemiesAlive = 40;
 
 			for (var i = 0; i < enemiesTotal; i++) {
 				enemies.push(new EnemyTank(i, game, tank, enemyBullets));
@@ -324,7 +324,7 @@ body {
 
 		function render() {
 
-			game.debug.text('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.length, 32, 32);
+			//game.debug.text('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.length, 32, 32);
 			game.debug.text('Enemies: ' + enemiesAlive + ' / ' + enemiesTotal,
 					32, 32);
 

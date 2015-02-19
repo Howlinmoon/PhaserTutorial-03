@@ -95,7 +95,7 @@ body {
 
 		};
 
-		var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', {
+		var game = new Phaser.Game(1500, 1500, Phaser.AUTO, '', {
 			preload : preload,
 			create : create,
 			update : update,
@@ -143,7 +143,7 @@ body {
 			game.world.setBounds(-1000, -1000, 2000, 2000);
 
 			//  Our tiled scrolling background
-			land = game.add.tileSprite(0, 0, 800, 600, 'earth');
+			land = game.add.tileSprite(0, 0,1500, 1500, 'earth');
 			land.fixedToCamera = true;
 
 			//  The base of our tank
@@ -324,7 +324,7 @@ body {
 
 		function render() {
 
-			// game.debug.text('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.length, 32, 32);
+			game.debug.text('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.length, 32, 32);
 			game.debug.text('Enemies: ' + enemiesAlive + ' / ' + enemiesTotal,
 					32, 32);
 

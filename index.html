@@ -228,8 +228,11 @@ body {
 
 			cursors = game.input.keyboard.createCursorKeys();
 			
-			// Try to make "W" an "UP" key alternative
+			// I Prefer the ASWD keys for driving
 			UpKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+			LeftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+			RightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+			DownKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
 
 		}
 
@@ -257,9 +260,9 @@ body {
 				}
 			}
 
-			if (cursors.left.isDown) {
+			if (cursors.left.isDown || LeftKey.isDown) {
 				tank.angle -= 4;
-			} else if (cursors.right.isDown) {
+			} else if (cursors.right.isDown || RightKey.isDown) {
 				tank.angle += 4;
 			}
 

@@ -44,7 +44,7 @@ body {
 			game.physics.enable(this.tank, Phaser.Physics.ARCADE);
 			this.tank.body.immovable = false;
 			this.tank.body.collideWorldBounds = true;
-			this.tank.body.bounce.setTo(0, 0);
+			this.tank.body.bounce.setTo(1, 1);
 
 			this.tank.angle = game.rnd.angle();
 
@@ -254,6 +254,13 @@ body {
 				if (enemies[i].alive) {
 					enemiesAlive++;
 					game.physics.arcade.collide(tank, enemies[i].tank);
+					// Try to make enemy tanks collide with each other
+					for (var j = 0; j < enemies.length; j++) {
+						// don't collide with ourself!
+						if (j != i) {
+							game.physics.arcade.collide(enemies[j].tank, enemies[i].tank);
+						}
+					}
 					game.physics.arcade.overlap(bullets, enemies[i].tank,
 							bulletHitEnemy, null, this);
 					enemies[i].update();

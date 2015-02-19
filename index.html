@@ -93,6 +93,7 @@ body {
 
 					bullet.reset(this.turret.x, this.turret.y);
 
+					// Enemy tank bullet speed - higher is faster
 					bullet.rotation = this.game.physics.arcade.moveToObject(
 							bullet, this.player, 10);
 				}
@@ -100,7 +101,7 @@ body {
 
 		};
 
-		var game = new Phaser.Game(1000, 1000, Phaser.AUTO, '', {
+		var game = new Phaser.Game(1000, 500, Phaser.AUTO, '', {
 			preload : preload,
 			create : create,
 			update : update,
@@ -148,7 +149,7 @@ body {
 			game.world.setBounds(-1000, -1000, 2000, 2000);
 
 			//  Our tiled scrolling background
-			land = game.add.tileSprite(0, 0,1000, 1000, 'earth');
+			land = game.add.tileSprite(0, 0,1000, 500, 'earth');
 			land.fixedToCamera = true;
 
 			//  The base of our tank
@@ -159,7 +160,7 @@ body {
 
 			//  This will force it to decelerate and limit its speed
 			game.physics.enable(tank, Phaser.Physics.ARCADE);
-			tank.body.drag.set(0.2);
+			tank.body.drag.set(0.3);
 			tank.body.maxVelocity.setTo(400, 400);
 			tank.body.collideWorldBounds = true;
 
@@ -196,7 +197,7 @@ body {
 			bullets = game.add.group();
 			bullets.enableBody = true;
 			bullets.physicsBodyType = Phaser.Physics.ARCADE;
-			bullets.createMultiple(30, 'bullet', 0, false);
+			bullets.createMultiple(5, 'bullet', 0, false);
 			bullets.setAll('anchor.x', 0.5);
 			bullets.setAll('anchor.y', 0.5);
 			bullets.setAll('outOfBoundsKill', true);

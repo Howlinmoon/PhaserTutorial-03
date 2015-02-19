@@ -221,7 +221,8 @@ body {
 
 			game.input.onDown.add(removeLogo, this);
 
-			game.camera.follow(tank);
+			//game.camera.follow(tank);
+			game.camera.follow(enemies[0]);
 			game.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
 			game.camera.focusOnXY(0, 0);
 

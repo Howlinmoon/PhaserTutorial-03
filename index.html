@@ -221,12 +221,15 @@ body {
 
 			game.input.onDown.add(removeLogo, this);
 
-			//game.camera.follow(tank);
-			game.camera.follow(enemies[0]);
+			game.camera.follow(tank);
+			//game.camera.follow(enemies[0]);
 			game.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
 			game.camera.focusOnXY(0, 0);
 
 			cursors = game.input.keyboard.createCursorKeys();
+			
+			// Try to make "W" an "UP" key alternative
+			UpKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
 		}
 
@@ -260,7 +263,7 @@ body {
 				tank.angle += 4;
 			}
 
-			if (cursors.up.isDown) {
+			if (cursors.up.isDown || UpKey.isDown) {
 				//  The speed we'll travel at
 				currentSpeed = 300;
 			} else {

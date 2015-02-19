@@ -17,14 +17,18 @@ body {
 	<script type="text/javascript">
 		EnemyTank = function(index, game, player, bullets) {
 
+			// Randomizes the intial location of the enemy tank
 			var x = game.world.randomX;
 			var y = game.world.randomY;
 
 			this.game = game;
-			this.health = 300;
+			// how much damage a tank can take before exploding.
+			// each shot does 1 damage
+			this.health = 5;
 			this.player = player;
 			this.bullets = bullets;
-			this.fireRate = 100;
+			// this is the delay between firing - make this too low - and they will slaughter the player quickly!
+			this.fireRate = 3000;
 			this.nextFire = 0;
 			this.alive = true;
 

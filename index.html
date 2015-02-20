@@ -86,7 +86,7 @@ body {
 			this.turret.rotation = this.game.physics.arcade.angleBetween(this.tank, this.player);
 
 			var distanceFromPlayer = this.game.physics.arcade.distanceBetween(this.tank, this.player);
-			console.log("Tank Number: "+this.tank.name+" is this far from the player: "+distanceFromPlayer);
+			//console.log("Tank Number: "+this.tank.name+" is this far from the player: "+distanceFromPlayer);
 
 			// the enemy tanks fire when they are within 300 pix of the player
 			if (distanceFromPlayer < 300) {
@@ -183,8 +183,8 @@ body {
 			//  Create some baddies to waste :)
 			enemies = [];
 
-			enemiesTotal = 40;
-			enemiesAlive = 40;
+			enemiesTotal = 100;
+			enemiesAlive = 100;
 
 			for (var i = 0; i < enemiesTotal; i++) {
 				enemies.push(new EnemyTank(i, game, tank, enemyBullets));

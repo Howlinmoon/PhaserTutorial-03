@@ -309,6 +309,11 @@ body {
 			var explosionAnimation = explosions.getFirstExists(false);
 			explosionAnimation.reset(enemy.x, enemy.y);
 			explosionAnimation.play('kaboom', 30, false, true);
+			// remove the enemy tank
+			enemy.shadow.kill();
+			enemy.tank.kill();
+			enemy.turret.kill();
+
 
 		}
 

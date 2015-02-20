@@ -54,8 +54,8 @@ body {
 
 		// a very basic method that damages the enemy tank
 		// if the current tank is so damaged its health is 0, it is destroyed here
-		EnemyTank.prototype.damage = function() {
-			this.health -= 1;
+		EnemyTank.prototype.damage = function(var amount) {
+			this.health -= amount;
 
 			if (this.health <= 0) {
 				this.alive = false;
@@ -307,16 +307,14 @@ body {
 		function enemyCollidePlayer(player, enemy) {
 			// blow someone up
 			console.log("attempting to blow up the enemy tank");
-			var explosionAnimation = explosions.getFirstExists(false);
-			explosionAnimation.reset(enemy.x, enemy.y);
-			explosionAnimation.play('kaboom', 30, false, true);
-			console.log("attempting to remove enemy tank");
-			// remove the enemy tank
-			enemies[enemy.name].shadow.kill();
-			enemies[enemy.name].kill();
-			enemies[enemy.name].turret.kill();
-
-
+			// give the tank 100 damage, that show destroy it.
+			var destroyed = enemies[enemy.name].damage(100);
+			// if 'destroyed' is true, the tank is out of health - so we destory it.
+			if (destroyed) {
+				var explosionAnimation = explosions.getFirstExists(false);
+				explosionAnimation.reset(tank.x, tank.y);
+				explosionAnimation.play('kaboom', 30, false, true);
+			}
 		}
 
 		function bulletHitPlayer(tank, bullet) {
@@ -330,7 +328,7 @@ body {
 			// we kill off the bullet
 			bullet.kill();
 			// and then decrement the tank's health
-			var destroyed = enemies[tank.name].damage();
+			var destroyed = enemies[tank.name].damage(1);
 			// if 'destroyed' is true, the tank is out of health - so we destory it.
 			if (destroyed) {
 				var explosionAnimation = explosions.getFirstExists(false);

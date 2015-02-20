@@ -249,9 +249,9 @@ body {
 				if (enemies[i].alive) {
 					enemiesAlive++;
 					// original method - collide
-					game.physics.arcade.collide(tank, enemies[i].tank);
+					// game.physics.arcade.collide(tank, enemies[i].tank);
 					// experimental method - overlap
-					// game.physics.arcade.overlap(tank, enemies[i].tank, enemyCollidePlayer, null, this);
+					game.physics.arcade.overlap(tank, enemies[i].tank, enemyCollidePlayer, null, this);
 					// Try to make enemy tanks collide with each other
 					for (var j = 0; j < enemies.length; j++) {
 						// don't collide with ourself!
@@ -301,6 +301,14 @@ body {
 				//  Boom!
 				fire();
 			}
+
+		}
+		
+		function enemyCollidePlayer(player, enemy) {
+			// blow someone up
+			var explosionAnimation = explosions.getFirstExists(false);
+			explosionAnimation.reset(enemy.x, enemy.y);
+			explosionAnimation.play('kaboom', 30, false, true);
 
 		}
 

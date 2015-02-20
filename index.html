@@ -54,7 +54,7 @@ body {
 
 		// a very basic method that damages the enemy tank
 		// if the current tank is so damaged its health is 0, it is destroyed here
-		EnemyTank.prototype.damage = function(var amount) {
+		EnemyTank.prototype.damage = function(amount) {
 			this.health -= amount;
 
 			if (this.health <= 0) {

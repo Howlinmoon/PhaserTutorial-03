@@ -260,7 +260,8 @@ body {
 					for (var j = 0; j < enemies.length; j++) {
 						// don't collide with ourself!
 						if (j != i) {
-							game.physics.arcade.collide(enemies[j].tank, enemies[i].tank);
+							// game.physics.arcade.collide(enemies[j].tank, enemies[i].tank);
+							game.physics.arcade.overlap(enemies[j].tank, enemies[i].tank, enemyCollideEnemy, null, this);
 						}
 					}
 					game.physics.arcade.overlap(bullets, enemies[i].tank, bulletHitEnemy, null, this);
@@ -339,6 +340,21 @@ body {
 			}
 		}
 
+		function enemyCollideEnemy(enemy1, enemy) {
+			// blow someone up - the 2nd tank gets it
+			console.log("attempting to blow up the enemy tank");
+			// give the tank 100 damage, that should destroy it.
+			var destroyed = enemies[enemy.name].damage(100);
+			// if 'destroyed' is true, the tank is out of health - so we destory it.
+			if (destroyed) {
+				var explosionAnimation = explosions.getFirstExists(false);
+				explosionAnimation.reset(enemy.x, enemy.y);
+				explosionAnimation.play('kaboom', 30, false, true);
+			}
+		}
+
+		
+		
 		function bulletHitPlayer(tank, bullet) {
 			// at the moment, nothing happens when the player tank gets hit
 			// except we kill off a bullet.

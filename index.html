@@ -306,9 +306,11 @@ body {
 		
 		function enemyCollidePlayer(player, enemy) {
 			// blow someone up
+			console.log("attempting to blow up the enemy tank");
 			var explosionAnimation = explosions.getFirstExists(false);
 			explosionAnimation.reset(enemy.x, enemy.y);
 			explosionAnimation.play('kaboom', 30, false, true);
+			console.log("attempting to remove enemy tank");
 			// remove the enemy tank
 			enemy.shadow.kill();
 			enemy.tank.kill();

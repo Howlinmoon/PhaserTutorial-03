@@ -15,6 +15,9 @@ body {
 	http://examples.phaser.io/_site/view_full.html?d=games&f=tanks.js&t=tanks
 
 	<script type="text/javascript">
+	
+		var TO_RADIANS = Math.PI / 180;
+
 		EnemyTank = function(index, game, player, bullets) {
 
 			// Randomizes the intial location of the enemy tank
@@ -48,7 +51,8 @@ body {
 
 			this.tank.angle = game.rnd.angle();
 
-			game.physics.arcade.velocityFromRotation(this.tank.rotation, 100, this.tank.body.velocity);
+			var randomInitialSpeed = = (Math.floor(Math.random() * 500) + 1 )
+			game.physics.arcade.velocityFromRotation(this.tank.rotation, randomInitialSpeed, this.tank.body.velocity);
 
 		};
 
@@ -280,10 +284,28 @@ body {
 			}
 
 			if (currentSpeed > 0) {
-				game.physics.arcade.velocityFromRotation(tank.rotation,
-						currentSpeed, tank.body.velocity);
+				game.physics.arcade.velocityFromRotation(tank.rotation, currentSpeed, tank.body.velocity);
 			}
 
+			/*
+			velocityFromRotation(rotation, speed, point) → {Phaser.Point}
+
+			Given the rotation (in radians) and speed calculate the velocity and return it as a Point object, or set it to the given point object. One way to use this is: velocityFromRotation(rotation, 200, sprite.velocity) which will set the values directly to the sprites velocity and not create a new Point object.
+
+			Parameters:
+
+			Name	Type	Argument	Default	Description
+			rotation	number			
+			The angle in radians.
+
+			speed	number	<optional>
+			60	
+			The speed it will move, in pixels per second sq.
+
+			point	Phaser.Point | object
+			*/
+			
+			
 			land.tilePosition.x = -game.camera.x;
 			land.tilePosition.y = -game.camera.y;
 
@@ -307,7 +329,7 @@ body {
 		function enemyCollidePlayer(player, enemy) {
 			// blow someone up
 			console.log("attempting to blow up the enemy tank");
-			// give the tank 100 damage, that show destroy it.
+			// give the tank 100 damage, that should destroy it.
 			var destroyed = enemies[enemy.name].damage(100);
 			// if 'destroyed' is true, the tank is out of health - so we destory it.
 			if (destroyed) {
@@ -355,8 +377,7 @@ body {
 		function render() {
 
 			//game.debug.text('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.length, 32, 32);
-			game.debug.text('Enemies: ' + enemiesAlive + ' / ' + enemiesTotal,
-					32, 32);
+			game.debug.text('Enemies: ' + enemiesAlive + ' / ' + enemiesTotal, 32, 32);
 
 		}
 	</script>

@@ -312,9 +312,9 @@ body {
 			explosionAnimation.play('kaboom', 30, false, true);
 			console.log("attempting to remove enemy tank");
 			// remove the enemy tank
-			enemy.shadow.kill();
-			enemy.tank.kill();
-			enemy.turret.kill();
+			enemies[enemy.name].shadow.kill();
+			enemies[enemy.name].kill();
+			enemies[enemy.name].turret.kill();
 
 
 		}

@@ -101,7 +101,7 @@ body {
 
 		};
 
-		var game = new Phaser.Game(1000, 500, Phaser.AUTO, '', {
+		var game = new Phaser.Game(1000, 1000, Phaser.AUTO, '', {
 			preload : preload,
 			create : create,
 			update : update,
@@ -149,7 +149,7 @@ body {
 			game.world.setBounds(-1000, -1000, 2000, 2000);
 
 			//  Our tiled scrolling background
-			land = game.add.tileSprite(0, 0,1000, 500, 'earth');
+			land = game.add.tileSprite(0, 0,1000, 1000, 'earth');
 			land.fixedToCamera = true;
 
 			//  The base of our tank

@@ -48,13 +48,13 @@ body {
 
 			this.tank.angle = game.rnd.angle();
 
-			game.physics.arcade.velocityFromRotation(this.tank.rotation, 100,
-					this.tank.body.velocity);
+			game.physics.arcade.velocityFromRotation(this.tank.rotation, 100, this.tank.body.velocity);
 
 		};
 
+		// a very basic method that damages the enemy tank
+		// if the current tank is so damaged its health is 0, it is destroyed here
 		EnemyTank.prototype.damage = function() {
-
 			this.health -= 1;
 
 			if (this.health <= 0) {
@@ -64,11 +64,11 @@ body {
 				this.tank.kill();
 				this.turret.kill();
 
+				// true indicates the tank is dead - and signals we need to clean it up
 				return true;
 			}
-
+			// otherwise, the tank is still alive, so return false
 			return false;
-
 		}
 
 		EnemyTank.prototype.update = function() {
@@ -79,14 +79,17 @@ body {
 
 			this.turret.x = this.tank.x;
 			this.turret.y = this.tank.y;
-			this.turret.rotation = this.game.physics.arcade.angleBetween(
-					this.tank, this.player);
+			this.turret.rotation = this.game.physics.arcade.angleBetween(this.tank, this.player);
 
 			var distanceFromPlayer = this.game.physics.arcade.distanceBetween(this.tank, this.player);
 			console.log("Tank Number: "+this.tank.name+" is this far from the player: "+distanceFromPlayer);
+
+			// the enemy tanks fire when they are within 300 pix of the player
 			if (distanceFromPlayer < 300) {
-				if (this.game.time.now > this.nextFire
-						&& this.bullets.countDead() > 0) {
+				// player tank is in range
+				if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0) {
+					// basically checks to see if enough time has elapsed since the tank last fired
+					// and this.bullets.countDead() checks to see if there is at least one dead object in the group
 					this.nextFire = this.game.time.now + this.fireRate;
 
 					var bullet = this.bullets.getFirstDead();
@@ -94,8 +97,7 @@ body {
 					bullet.reset(this.turret.x, this.turret.y);
 
 					// Enemy tank bullet speed - higher is faster
-					bullet.rotation = this.game.physics.arcade.moveToObject(
-							bullet, this.player, 10);
+					bullet.rotation = this.game.physics.arcade.moveToObject(bullet, this.player, 500);
 				}
 			}
 
@@ -110,16 +112,12 @@ body {
 
 		function preload() {
 
-			game.load.atlas('tank', 'assets/tanks.png',
-					'assets/tanks.json');
-			game.load.atlas('enemy', 'assets/enemy-tanks.png',
-					'assets/tanks.json');
+			game.load.atlas('tank', 'assets/tanks.png', 'assets/tanks.json');
+			game.load.atlas('enemy', 'assets/enemy-tanks.png', 'assets/tanks.json');
 			game.load.image('logo', 'assets/logo.png');
 			game.load.image('bullet', 'assets/bullet.png');
 			game.load.image('earth', 'assets/scorched_earth.png');
-			game.load.spritesheet('kaboom', 'assets/explosion.png',
-					64, 64, 23);
-
+			game.load.spritesheet('kaboom', 'assets/explosion.png', 64, 64, 23);
 		}
 
 		var land;
@@ -155,8 +153,7 @@ body {
 			//  The base of our tank
 			tank = game.add.sprite(0, 0, 'tank', 'tank1');
 			tank.anchor.setTo(0.5, 0.5);
-			tank.animations.add('move', [ 'tank1', 'tank2', 'tank3', 'tank4',
-					'tank5', 'tank6' ], 20, true);
+			tank.animations.add('move', [ 'tank1', 'tank2', 'tank3', 'tank4', 'tank5', 'tank6' ], 20, true);
 
 			//  This will force it to decelerate and limit its speed
 			game.physics.enable(tank, Phaser.Physics.ARCADE);
@@ -207,8 +204,7 @@ body {
 			explosions = game.add.group();
 
 			for (var i = 0; i < 10; i++) {
-				var explosionAnimation = explosions.create(0, 0, 'kaboom',
-						[ 0 ], false);
+				var explosionAnimation = explosions.create(0, 0, 'kaboom', [ 0 ], false);
 				explosionAnimation.anchor.setTo(0.5, 0.5);
 				explosionAnimation.animations.add('kaboom');
 			}
@@ -222,7 +218,6 @@ body {
 			game.input.onDown.add(removeLogo, this);
 
 			game.camera.follow(tank);
-			//game.camera.follow(enemies[0]);
 			game.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
 			game.camera.focusOnXY(0, 0);
 
@@ -233,7 +228,6 @@ body {
 			LeftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
 			RightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
 			DownKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
-
 		}
 
 		function removeLogo() {
@@ -245,15 +239,19 @@ body {
 
 		function update() {
 
-			game.physics.arcade.overlap(enemyBullets, tank, bulletHitPlayer,
-					null, this);
+			// check to see if any enemy bullet objects have hit the player tank
+			game.physics.arcade.overlap(enemyBullets, tank, bulletHitPlayer,null, this);
 
+			// assume all enemies are dead
 			enemiesAlive = 0;
 
 			for (var i = 0; i < enemies.length; i++) {
 				if (enemies[i].alive) {
 					enemiesAlive++;
+					// original method - collide
 					game.physics.arcade.collide(tank, enemies[i].tank);
+					// experimental method - overlap
+					// game.physics.arcade.overlap(tank, enemies[i].tank, enemyCollidePlayer, null, this);
 					// Try to make enemy tanks collide with each other
 					for (var j = 0; j < enemies.length; j++) {
 						// don't collide with ourself!
@@ -261,21 +259,20 @@ body {
 							game.physics.arcade.collide(enemies[j].tank, enemies[i].tank);
 						}
 					}
-					game.physics.arcade.overlap(bullets, enemies[i].tank,
-							bulletHitEnemy, null, this);
+					game.physics.arcade.overlap(bullets, enemies[i].tank, bulletHitEnemy, null, this);
 					enemies[i].update();
 				}
 			}
 
 			if (cursors.left.isDown || LeftKey.isDown) {
-				tank.angle -= 4;
+				tank.angle -= 1;
 			} else if (cursors.right.isDown || RightKey.isDown) {
-				tank.angle += 4;
+				tank.angle += 1;
 			}
 
 			if (cursors.up.isDown || UpKey.isDown) {
 				//  The speed we'll travel at
-				currentSpeed = 300;
+				currentSpeed = 150;
 			} else {
 				if (currentSpeed > 0) {
 					currentSpeed -= 4;
@@ -308,23 +305,23 @@ body {
 		}
 
 		function bulletHitPlayer(tank, bullet) {
-
+			// at the moment, nothing happens when the player tank gets hit
+			// except we kill off a bullet.
 			bullet.kill();
-
 		}
 
 		function bulletHitEnemy(tank, bullet) {
-
+			// when an enemy tank is hit by the player
+			// we kill off the bullet
 			bullet.kill();
-
+			// and then decrement the tank's health
 			var destroyed = enemies[tank.name].damage();
-
+			// if 'destroyed' is true, the tank is out of health - so we destory it.
 			if (destroyed) {
 				var explosionAnimation = explosions.getFirstExists(false);
 				explosionAnimation.reset(tank.x, tank.y);
 				explosionAnimation.play('kaboom', 30, false, true);
 			}
-
 		}
 
 		function fire() {

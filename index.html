@@ -312,7 +312,7 @@ body {
 			// if 'destroyed' is true, the tank is out of health - so we destory it.
 			if (destroyed) {
 				var explosionAnimation = explosions.getFirstExists(false);
-				explosionAnimation.reset(tank.x, tank.y);
+				explosionAnimation.reset(enemy.x, enemy.y);
 				explosionAnimation.play('kaboom', 30, false, true);
 			}
 		}

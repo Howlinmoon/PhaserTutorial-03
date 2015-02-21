@@ -17,7 +17,7 @@ body {
 	<script type="text/javascript">
 	
 		var TO_RADIANS = Math.PI / 180;
-
+		var TO_DEGREES = 180 / Math.PI;
 		EnemyTank = function(index, game, player, bullets) {
 
 			// Randomizes the intial location of the enemy tank
@@ -56,6 +56,7 @@ body {
 
 		};
 
+
 		// a very basic method that damages the enemy tank
 		// if the current tank is so damaged its health is 0, it is destroyed here
 		EnemyTank.prototype.damage = function(amount) {
@@ -63,11 +64,11 @@ body {
 
 			if (this.health <= 0) {
 				this.alive = false;
-
+				
 				this.shadow.kill();
 				this.tank.kill();
 				this.turret.kill();
-
+				
 				// true indicates the tank is dead - and signals we need to clean it up
 				return true;
 			}
@@ -75,6 +76,25 @@ body {
 			return false;
 		}
 
+		// This method attempts to turn the tank in the opposite direction
+		// which will hopefully drive it away from whatever it collided with.
+		EnemyTank.prototype.turnAround = function(newSpeed) {
+			// set the velocity to what was passed in - newSpeed
+			game.physics.arcade.velocityFromRotation(this.tank.rotation, newSpeed, this.tank.body.velocity);
+			var oldTankAngle = this.tank.angle;
+			// old tankAngle is in degrees, and can be anywhere between -180 and +180
+			// we'll subtract 180 from it - and if it is less than -180, we'll add 360 to it.
+			var newTankAngle = oldTankAngle - 180;
+			// adjust, if we went too far negative
+			if (newTankAngle < -180) {
+				newTankAngle += 360;
+			}
+			// assign the new angle  back to the tank
+			this.tank.angle = newTankAngle;
+			// ideally, this just spun the tank around
+		}
+
+		
 		EnemyTank.prototype.update = function() {
 
 			this.shadow.x = this.tank.x;
@@ -340,17 +360,11 @@ body {
 			}
 		}
 
-		function enemyCollideEnemy(enemy1, enemy) {
-			// blow someone up - the 2nd tank gets it
-			console.log("attempting to blow up the enemy tank");
-			// give the tank 100 damage, that should destroy it.
-			var destroyed = enemies[enemy.name].damage(100);
-			// if 'destroyed' is true, the tank is out of health - so we destory it.
-			if (destroyed) {
-				var explosionAnimation = explosions.getFirstExists(false);
-				explosionAnimation.reset(enemy.x, enemy.y);
-				explosionAnimation.play('kaboom', 30, false, true);
-			}
+		function enemyCollideEnemy(enemy1, enemy2) {
+			console.log("attempting to turn around enemy1");
+			enemies[enemy1.name].turnAround(50);
+			console.log("attempting to turn around enemy2");
+			enemies[enemy2.name].turnAround(50);
 		}
 
 		

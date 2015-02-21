@@ -348,16 +348,16 @@ body {
 		}
 		
 		function enemyCollidePlayer(player, enemy) {
-			if (enemies[enemy.name].body.touching.up) {
+			if (enemy.body.touching.up) {
 				console.log("enemy is touching player - dir up");
 			}
-			if (enemies[enemy.name].body.touching.down) {
+			if (enemy.body.touching.down) {
 				console.log("enemy is touching player - dir down");
 			}
-			if (enemies[enemy.name].body.touching.left) {
+			if (enemy.body.touching.left) {
 				console.log("enemy is touching player - dir left");
 			}
-			if (enemies[enemy.name].body.touching.right) {
+			if (enemy.body.touching.right) {
 				console.log("enemy is touching player - dir right");
 			}
 			

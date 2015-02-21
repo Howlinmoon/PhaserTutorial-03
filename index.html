@@ -348,32 +348,32 @@ body {
 		}
 		
 		function enemyCollidePlayer(player, enemy) {
-			if (enemies[enemy.name].touching.up) {
+			if (enemies[enemy.name].body.touching.up) {
 				console.log("enemy is touching player - dir up");
 			}
-			if (enemies[enemy.name].touching.down) {
+			if (enemies[enemy.name].body.touching.down) {
 				console.log("enemy is touching player - dir down");
 			}
-			if (enemies[enemy.name].touching.left) {
+			if (enemies[enemy.name].body.touching.left) {
 				console.log("enemy is touching player - dir left");
 			}
-			if (enemies[enemy.name].touching.right) {
+			if (enemies[enemy.name].body.touching.right) {
 				console.log("enemy is touching player - dir right");
 			}
 			
 		}
 
 		function enemyCollideEnemy(enemy1, enemy2) {
-			if (enemies[enemy1.name].touching.up) {
+			if (enemies[enemy1.name].body.touching.up) {
 				console.log("enemy1 is touching enemy2 - dir up");
 			}
-			if (enemies[enemy1.name].touching.down) {
+			if (enemies[enemy1.name].body.touching.down) {
 				console.log("enemy1 is touching enemy2 - dir down");
 			}
-			if (enemies[enemy1.name].touching.left) {
+			if (enemies[enemy1.name].body.touching.left) {
 				console.log("enemy1 is touching enemy2 - dir left");
 			}
-			if (enemies[enemy1.name].touching.right) {
+			if (enemies[enemy1.name].body.touching.right) {
 				console.log("enemy1 is touching enemy2 - dir right");
 			}
 		}

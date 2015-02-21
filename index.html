@@ -48,8 +48,6 @@ body {
 			this.tank.body.immovable = false;
 			this.tank.body.collideWorldBounds = true;
 			this.tank.body.bounce.setTo(1, 1);
-			this.tank.body.customSeparateX = true;
-			this.tank.body.customSeparateY = true;
 
 			this.tank.angle = game.rnd.angle();
 
@@ -282,8 +280,8 @@ body {
 					for (var j = 0; j < enemies.length; j++) {
 						// don't collide with ourself!
 						if (j != i) {
-							game.physics.arcade.collide(enemies[j].tank, enemies[i].tank);
-							//game.physics.arcade.overlap(enemies[j].tank, enemies[i].tank, enemyCollideEnemy, null, this);
+							//game.physics.arcade.collide(enemies[j].tank, enemies[i].tank);
+							game.physics.arcade.overlap(enemies[j].tank, enemies[i].tank, enemyCollideEnemy, null, this);
 						}
 					}
 					game.physics.arcade.overlap(bullets, enemies[i].tank, bulletHitEnemy, null, this);
@@ -350,15 +348,34 @@ body {
 		}
 		
 		function enemyCollidePlayer(player, enemy) {
-			console.log("attempting to turn around enemy");
-			enemies[enemy.name].turnAround(50);
+			if (enemies[enemy.name].touching.up) {
+				console.log("enemy is touching player - dir up");
+			}
+			if (enemies[enemy.name].touching.down) {
+				console.log("enemy is touching player - dir down");
+			}
+			if (enemies[enemy.name].touching.left) {
+				console.log("enemy is touching player - dir left");
+			}
+			if (enemies[enemy.name].touching.right) {
+				console.log("enemy is touching player - dir right");
+			}
+			
 		}
 
 		function enemyCollideEnemy(enemy1, enemy2) {
-			console.log("attempting to turn around enemy1");
-			enemies[enemy1.name].turnAround(50);
-			console.log("attempting to turn around enemy2");
-			enemies[enemy2.name].turnAround(50);
+			if (enemies[enemy1.name].touching.up) {
+				console.log("enemy1 is touching enemy2 - dir up");
+			}
+			if (enemies[enemy1.name].touching.down) {
+				console.log("enemy1 is touching enemy2 - dir down");
+			}
+			if (enemies[enemy1.name].touching.left) {
+				console.log("enemy1 is touching enemy2 - dir left");
+			}
+			if (enemies[enemy1.name].touching.right) {
+				console.log("enemy1 is touching enemy2 - dir right");
+			}
 		}
 
 		

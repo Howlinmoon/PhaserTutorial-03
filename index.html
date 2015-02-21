@@ -348,16 +348,8 @@ body {
 		}
 		
 		function enemyCollidePlayer(player, enemy) {
-			// blow someone up
-			console.log("attempting to blow up the enemy tank");
-			// give the tank 100 damage, that should destroy it.
-			var destroyed = enemies[enemy.name].damage(100);
-			// if 'destroyed' is true, the tank is out of health - so we destory it.
-			if (destroyed) {
-				var explosionAnimation = explosions.getFirstExists(false);
-				explosionAnimation.reset(enemy.x, enemy.y);
-				explosionAnimation.play('kaboom', 30, false, true);
-			}
+			console.log("attempting to turn around enemy");
+			enemies[enemy.name].turnAround(50);
 		}
 
 		function enemyCollideEnemy(enemy1, enemy2) {

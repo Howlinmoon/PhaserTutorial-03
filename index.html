@@ -272,7 +272,8 @@ body {
 			// tank.name is an index
 			// thus, enemies[tank.name is a pointer to the tank in the enemies array
 			var tankHealth = enemies[tank.name].health;
-			console.log("Tank health (before) = "+tankHealth);
+			var tankName = enemies[tank.name].name;
+			console.log("Tank Id: "+tankName+" health (before) = "+tankHealth);
 			var destroyed = enemies[tank.name].damage(1);
 			// if 'destroyed' is true, the tank is out of health - so we destory it.
 			if (destroyed) {

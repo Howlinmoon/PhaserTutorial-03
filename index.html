@@ -303,8 +303,8 @@ body {
 					for (var j = 0; j < enemies.length; j++) {
 						// don't collide with ourself!
 						if (j != i) {
-							game.physics.arcade.collide(enemies[j].tank, enemies[i].tank);
-							//game.physics.arcade.overlap(enemies[j].tank, enemies[i].tank, enemyCollideEnemy, null, this);
+							//game.physics.arcade.collide(enemies[j].tank, enemies[i].tank);
+							game.physics.arcade.overlap(enemies[j].tank, enemies[i].tank, enemyCollideEnemy, null, this);
 						}
 					}
 					game.physics.arcade.overlap(bullets, enemies[i].tank, bulletHitEnemy, null, this);

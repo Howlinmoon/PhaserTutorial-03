@@ -387,16 +387,16 @@ body {
 		}
 
 		function enemyCollideEnemy(enemy1, enemy2) {
-			if (enemies[enemy1.name].body.touching.up) {
+			if (enemy1.body.touching.up) {
 				console.log("enemy1 is touching enemy2 - dir up");
 			}
-			if (enemies[enemy1.name].body.touching.down) {
+			if (enemy1.body.touching.down) {
 				console.log("enemy1 is touching enemy2 - dir down");
 			}
-			if (enemies[enemy1.name].body.touching.left) {
+			if (enemy1.body.touching.left) {
 				console.log("enemy1 is touching enemy2 - dir left");
 			}
-			if (enemies[enemy1.name].body.touching.right) {
+			if (enemy1.body.touching.right) {
 				console.log("enemy1 is touching enemy2 - dir right");
 			}
 		}

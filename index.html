@@ -206,11 +206,13 @@ body {
 			enemiesTotal = 5;
 			enemiesAlive = 5;
 
+			// EnemyTank = function(index, game, player, bullets)
+			
 			for (var i = 0; i < enemiesTotal; i++) {
 				enemies.push(new EnemyTank(i, game, tank, enemyBullets));
 			}
 
-			//  A shadow below our tank
+			//  A shadow below our (player) tank
 			shadow = game.add.sprite(0, 0, 'tank', 'shadow');
 			shadow.anchor.setTo(0.5, 0.5);
 
@@ -260,6 +262,26 @@ body {
 			logo.kill();
 
 		}
+		
+		function bulletHitEnemy(tank, bullet) {
+			// when an enemy tank is hit by the player
+			// we kill off the bullet
+			bullet.kill();
+			// and then decrement the tank's health
+			// enemies is an array
+			// tank.name is an index
+			// thus, enemies[tank.name is a pointer to the tank in the enemies array
+			var tankHealth = this.tank.health;
+			console.log("Tank health (before) = "+tankHealth);
+			var destroyed = enemies[tank.name].damage(1);
+			// if 'destroyed' is true, the tank is out of health - so we destory it.
+			if (destroyed) {
+				var explosionAnimation = explosions.getFirstExists(false);
+				explosionAnimation.reset(tank.x, tank.y);
+				explosionAnimation.play('kaboom', 30, false, true);
+			}
+		}
+
 
 		function update() {
 
@@ -386,19 +408,6 @@ body {
 			bullet.kill();
 		}
 
-		function bulletHitEnemy(tank, bullet) {
-			// when an enemy tank is hit by the player
-			// we kill off the bullet
-			bullet.kill();
-			// and then decrement the tank's health
-			var destroyed = enemies[tank.name].damage(1);
-			// if 'destroyed' is true, the tank is out of health - so we destory it.
-			if (destroyed) {
-				var explosionAnimation = explosions.getFirstExists(false);
-				explosionAnimation.reset(tank.x, tank.y);
-				explosionAnimation.play('kaboom', 30, false, true);
-			}
-		}
 
 		function fire() {
 

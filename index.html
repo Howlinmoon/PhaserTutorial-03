@@ -333,7 +333,8 @@ body {
 			}
 			
 			// need to check and see if the tank (player) collided with any enemy tanks - if so - just stop the player.
-			
+			game.physics.arcade.overlap(tank, enemies, playerHitEnemy, null, this);
+
 
 			/*
 			velocityFromRotation(rotation, speed, point) → {Phaser.Point}
@@ -401,6 +402,10 @@ body {
 				enemies[enemy.name].turnAround(100);
 			}
 			
+		}
+		
+		function playerHitEnemy(tank, enemies) {
+			console.log("Detected a collision between the player and an enemy tank")
 		}
 
 		function enemyCollideEnemy(enemy1, enemy2) {

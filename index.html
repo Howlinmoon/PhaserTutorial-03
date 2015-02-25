@@ -374,20 +374,26 @@ body {
 
 			if (enemy.body.touching.up) {
 				console.log("Tank Id: "+tankName+" going direction UP ran into the player tank");
-				// try to steer the tank directly away from the player at speed 100
+				// try to steer the tank directly away from the collision point at speed 100
 				enemies[enemy.name].turnAround(100);
 			}
 
 			if (enemy.body.touching.down) {
 				console.log("Tank Id: "+tankName+" going direction DOWN ran into the player tank");
+				// try to steer the tank directly away from the collision point at speed 100
+				enemies[enemy.name].turnAround(100);
 			}
 
 			if (enemy.body.touching.left) {
 				console.log("Tank Id: "+tankName+" going direction LEFT ran into the player tank");
+				// try to steer the tank directly away from the collision point at speed 100
+				enemies[enemy.name].turnAround(100);
 			}
 
 			if (enemy.body.touching.right) {
 				console.log("Tank Id: "+tankName+" going direction RIGHT ran into the player tank");
+				// try to steer the tank directly away from the collision point at speed 100
+				enemies[enemy.name].turnAround(100);
 			}
 			
 		}
@@ -398,18 +404,26 @@ body {
 
 			if (enemy1.body.touching.up) {
 				console.log("Tank "+tankName1+" going direction UP has collided with "+tankName2);
+				// try to steer the tank directly away from the collision point at speed 100
+				enemies[enemy1.name].turnAround(100);
 			}
 			
 			if (enemy1.body.touching.down) {
 				console.log("Tank "+tankName1+" going direction DOWN has collided with "+tankName2);
+				// try to steer the tank directly away from the collision point at speed 100
+				enemies[enemy1.name].turnAround(100);
 			}
 
 			if (enemy1.body.touching.left) {
 				console.log("Tank "+tankName1+" going direction LEFT has collided with "+tankName2);
+				// try to steer the tank directly away from the collision point at speed 100
+				enemies[enemy1.name].turnAround(100);
 			}
 
 			if (enemy1.body.touching.right) {
 				console.log("Tank "+tankName1+" going direction RIGHT has collided with "+tankName2);
+				// try to steer the tank directly away from the collision point at speed 100
+				enemies[enemy1.name].turnAround(100);
 			}
 		}
 

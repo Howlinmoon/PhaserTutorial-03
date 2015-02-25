@@ -303,7 +303,6 @@ body {
 					for (var j = 0; j < enemies.length; j++) {
 						// don't collide with ourself!
 						if (j != i) {
-							//game.physics.arcade.collide(enemies[j].tank, enemies[i].tank);
 							game.physics.arcade.overlap(enemies[j].tank, enemies[i].tank, enemyCollideEnemy, null, this);
 						}
 					}
@@ -375,6 +374,8 @@ body {
 
 			if (enemy.body.touching.up) {
 				console.log("Tank Id: "+tankName+" going direction UP ran into the player tank");
+				// try to steer the tank directly away from the player at speed 100
+				enemies[enemy.name].turnAround(100);
 			}
 
 			if (enemy.body.touching.down) {

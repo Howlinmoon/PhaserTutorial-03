@@ -371,7 +371,7 @@ body {
 		}
 		
 		function enemyCollidePlayer(player, enemy) {
-			var tankName  = enemies[tank.name].tank.name;
+			var tankName  = enemies[enemy.name].tank.name;
 
 			if (enemy.body.touching.up) {
 				console.log("Tank Id: "+tankName+" going direction UP ran into the player tank");

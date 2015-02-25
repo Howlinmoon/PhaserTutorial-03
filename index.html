@@ -82,7 +82,7 @@ body {
 			// set the velocity to what was passed in - newSpeed
 			// ignore new speed - and just randomize it
 			var newRandomSpeed =  (Math.floor(Math.random() * 250) + 250 )
-			game.physics.arcade.velocityFromRotation(this.tank.rotation, newSpeed, this.tank.body.velocity);
+			game.physics.arcade.velocityFromRotation(this.tank.rotation, newRandomSpeed, this.tank.body.velocity);
 			var oldTankAngle = this.tank.angle;
 			// old tankAngle is in degrees, and can be anywhere between -180 and +180
 			// we'll subtract 180 from it - and if it is less than -180, we'll add 360 to it.

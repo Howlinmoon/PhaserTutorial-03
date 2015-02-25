@@ -52,7 +52,7 @@ body {
 			this.tank.angle = game.rnd.angle();
 
 			var randomInitialSpeed =  (Math.floor(Math.random() * 500) + 1 )
-			game.physics.arcade.velocityFromRotation(this.tank.rotation, randomInitialSpeed, this.tank.body.velocity);
+			game.physics.arcade.velocityFromRotation(this.tank.rotation, 0, this.tank.body.velocity);
 
 		};
 
@@ -205,8 +205,8 @@ body {
 			//  Create some baddies to waste :)
 			enemies = [];
 
-			enemiesTotal = 10;
-			enemiesAlive = 10;
+			enemiesTotal = 5;
+			enemiesAlive = 5;
 
 			// EnemyTank = function(index, game, player, bullets)
 			
@@ -379,25 +379,25 @@ body {
 			var tankName  = enemies[enemy.name].tank.name;
 
 			if (enemy.body.touching.up) {
-				console.log("Tank Id: "+tankName+" going direction UP ran into the player tank");
+				//console.log("Tank Id: "+tankName+" going direction UP ran into the player tank");
 				// try to steer the tank directly away from the collision point at speed 100
 				enemies[enemy.name].turnAround(100);
 			}
 
 			if (enemy.body.touching.down) {
-				console.log("Tank Id: "+tankName+" going direction DOWN ran into the player tank");
+				//console.log("Tank Id: "+tankName+" going direction DOWN ran into the player tank");
 				// try to steer the tank directly away from the collision point at speed 100
 				enemies[enemy.name].turnAround(100);
 			}
 
 			if (enemy.body.touching.left) {
-				console.log("Tank Id: "+tankName+" going direction LEFT ran into the player tank");
+				//console.log("Tank Id: "+tankName+" going direction LEFT ran into the player tank");
 				// try to steer the tank directly away from the collision point at speed 100
 				enemies[enemy.name].turnAround(100);
 			}
 
 			if (enemy.body.touching.right) {
-				console.log("Tank Id: "+tankName+" going direction RIGHT ran into the player tank");
+				//console.log("Tank Id: "+tankName+" going direction RIGHT ran into the player tank");
 				// try to steer the tank directly away from the collision point at speed 100
 				enemies[enemy.name].turnAround(100);
 			}
@@ -413,25 +413,25 @@ body {
 			var tankName2  = enemies[enemy2.name].tank.name;
 
 			if (enemy1.body.touching.up) {
-				console.log("Tank "+tankName1+" going direction UP has collided with "+tankName2);
+				//console.log("Tank "+tankName1+" going direction UP has collided with "+tankName2);
 				// try to steer the tank directly away from the collision point at speed 100
 				enemies[enemy1.name].turnAround(100);
 			}
 			
 			if (enemy1.body.touching.down) {
-				console.log("Tank "+tankName1+" going direction DOWN has collided with "+tankName2);
+				//console.log("Tank "+tankName1+" going direction DOWN has collided with "+tankName2);
 				// try to steer the tank directly away from the collision point at speed 100
 				enemies[enemy1.name].turnAround(100);
 			}
 
 			if (enemy1.body.touching.left) {
-				console.log("Tank "+tankName1+" going direction LEFT has collided with "+tankName2);
+				//console.log("Tank "+tankName1+" going direction LEFT has collided with "+tankName2);
 				// try to steer the tank directly away from the collision point at speed 100
 				enemies[enemy1.name].turnAround(100);
 			}
 
 			if (enemy1.body.touching.right) {
-				console.log("Tank "+tankName1+" going direction RIGHT has collided with "+tankName2);
+				//console.log("Tank "+tankName1+" going direction RIGHT has collided with "+tankName2);
 				// try to steer the tank directly away from the collision point at speed 100
 				enemies[enemy1.name].turnAround(100);
 			}

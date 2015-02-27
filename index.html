@@ -21,8 +21,13 @@ body {
 		EnemyTank = function(index, game, player, bullets) {
 
 			// Randomizes the intial location of the enemy tank
-			var x = game.world.randomX;
-			var y = game.world.randomY;
+			//var x = game.world.randomX;
+			//var y = game.world.randomY;
+            
+            // Start the tanks along the bottom of the world, equally spaced
+			var y = 1000;
+            var x = index * 300 + -700;
+            console.log("Placing Tank #"+index+" X: "+x+", Y: "+y);
 
 			this.game = game;
 			// how much damage a tank can take before exploding.
@@ -34,6 +39,7 @@ body {
 			this.fireRate = 3000;
 			this.nextFire = 0;
 			this.alive = true;
+            this.spottedPlayer = false;
 
 			this.shadow = game.add.sprite(x, y, 'enemy', 'shadow');
 			this.tank = game.add.sprite(x, y, 'enemy', 'tank1');
@@ -109,6 +115,30 @@ body {
 
 			var distanceFromPlayer = this.game.physics.arcade.distanceBetween(this.tank, this.player);
 			//console.log("Tank Number: "+this.tank.name+" is this far from the player: "+distanceFromPlayer);
+            
+            // has the enemy tank spotted the player?
+            // assume that if the enemy is within 1000pix - it has spotted the player
+            if (this.tank.name == 0) {
+                // only report tank 0
+                if (distanceFromPlayer < 1000) {
+                    console.log("Tank 0 is in of visual range of the player");
+                    if (this.tank.spottedPlayer == false) {
+                        console.log("Tank 0 has spotted the player - range: "+distanceFromPlayer);
+                        this.tank.spottedPlayer = true;
+                    } else {
+                        console.log("this.tank.spottedPlayer must be true");
+                    }
+                } else {
+                    
+                    console.log("Tank 0 is out of visual range of the player");
+                    
+                    if (this.tank.spottedPlayer == true) {
+                        console.log("Tank 0 has lost sight of the player");
+                        this.tank.spottedPlayer = false;
+                    }
+                }
+            }
+            
 
 			// the enemy tanks fire when they are within 300 pix of the player
 			if (distanceFromPlayer < 300) {

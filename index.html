@@ -121,16 +121,16 @@ body {
             if (this.tank.name == 0) {
                 // only report tank 0
                 if (distanceFromPlayer < 1000) {
-                    console.log("Tank 0 is in of visual range of the player");
+                    // console.log("Tank 0 is in of visual range of the player");
                     if (this.tank.spottedPlayer == false) {
                         console.log("Tank 0 has spotted the player - range: "+distanceFromPlayer);
                         this.tank.spottedPlayer = true;
                     } else {
-                        console.log("this.tank.spottedPlayer must be true");
+                        //console.log("this.tank.spottedPlayer must be true");
                     }
                 } else {
                     
-                    console.log("Tank 0 is out of visual range of the player");
+                    //console.log("Tank 0 is out of visual range of the player");
                     
                     if (this.tank.spottedPlayer == true) {
                         console.log("Tank 0 has lost sight of the player");

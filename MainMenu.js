@@ -1,39 +1,45 @@
 
-BasicGame.MainMenu = function (game) {
+TankGame.MainMenu = function (game) {
 
 	this.music = null;
 	this.playButton = null;
 
 };
 
-BasicGame.MainMenu.prototype = {
+TankGame.MainMenu.prototype = {
 
 	create: function () {
+        // Attempting to create a static title page displaying the "Tanks" Logo
+        // and waiting for a mouse click before continuing on
+        
+        //  Resize our game world to be a 2000 x 2000 square
+        this.world.setBounds(-1000, -1000, 2000, 2000);
+
+        //  Our tiled scrolling background
+        land = this.add.tileSprite(0, 0,1000, 1000, 'earth');
+        land.fixedToCamera = true;
 
 		//	We've already preloaded our assets, so let's kick right into the Main Menu itself.
-		//	Here all we're doing is playing some music and adding a picture and button
-		//	Naturally I expect you to do something significantly better :)
+        logo = this.add.sprite(0, 200, 'logo');
+        logo.fixedToCamera = true;
 
-		this.music = this.add.audio('titleMusic');
-		this.music.play();
 
-		this.add.sprite(0, 0, 'titlepage');
-
-		this.playButton = this.add.button(400, 600, 'playButton', this.startGame, this, 'buttonOver', 'buttonOut', 'buttonOver');
+        console.log("MainMenu.create function called");
 
 	},
 
 	update: function () {
 
 		//	Do some nice funky main menu effect here
+        this.input.onDown.add(removeLogo, this);
+        console.log("MainMenu.update function called");
 
 	},
 
 	startGame: function (pointer) {
 
-		//	Ok, the Play Button has been clicked or touched, so let's stop the music (otherwise it'll carry on playing)
-		this.music.stop();
 
+        console.log("MainMenu.startGame function called - transfering control to Game");
 		//	And start the actual game
 		this.state.start('Game');
 

@@ -1,5 +1,5 @@
 
-BasicGame.Game = function (game) {
+TankGame.Game = function (game) {
 
     //  When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
 
@@ -25,16 +25,16 @@ BasicGame.Game = function (game) {
 
 };
 
-BasicGame.Game.prototype = {
+TankGame.Game.prototype = {
 
     create: function () {
 
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
-
+        console.log("Game.create function called");
     },
 
     update: function () {
-
+        console.log("Game.update function called");
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
 
     },
@@ -45,6 +45,7 @@ BasicGame.Game.prototype = {
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
 
         //  Then let's go back to the main menu.
+        console.log("Game.quitGame function called - returning to MainMenu state");
         this.state.start('MainMenu');
 
     }

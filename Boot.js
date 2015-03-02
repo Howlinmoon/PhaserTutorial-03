@@ -18,13 +18,13 @@ TankGame.Boot.prototype = {
             //  If you have any desktop specific settings, they can go in here
             this.scale.pageAlignHorizontally = true;
         } else {
-            //  "scale the game, no lower than 480x260 and no higher than 1024x768"
+            //  scale the game, no lower than 512x512 and no higher than 1000x1000"
             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-            this.scale.setMinMax(480, 260, 1000, 1000);
+            this.scale.setMinMax(512, 512, 1000, 1000);
             this.scale.forceLandscape = true;
             this.scale.pageAlignHorizontally = true;
         }
-        
+        this.stage.backgroundColor = '#171642';
         console.log("Boot.init called");
 
     },
@@ -32,9 +32,8 @@ TankGame.Boot.prototype = {
     preload: function () {
 
         //  Here we load the assets required for our preloader - if we had any
-        // these are examples
-        // this.load.image('preloaderBackground', 'images/preloader_background.jpg');
-        //this.load.image('preloaderBar', 'images/preloadr_bar.png');
+        this.load.image('preloadBar', 'assets/loader_bar.png');
+        this.load.image('titleimage', 'assets/logo.png');
         console.log("Boot.preload called");
 
     },

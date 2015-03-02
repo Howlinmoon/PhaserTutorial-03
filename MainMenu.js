@@ -43,6 +43,11 @@ TankGame.MainMenu.prototype = {
 		//	And start the actual game
 		this.state.start('Game');
 
-	}
+	},
+    
+    removeLogo: function() {
+        game.input.onDown.remove(removeLogo, this);
+        logo.kill();
+    }
 
 };

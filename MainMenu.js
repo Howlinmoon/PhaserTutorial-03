@@ -16,11 +16,11 @@ TankGame.MainMenu.prototype = {
         this.world.setBounds(-1000, -1000, 2000, 2000);
 
         //  Our tiled scrolling background
-        land = this.add.tileSprite(0, 0,1000, 1000, 'earth');
+        land = this.add.tileSprite(0, 0, 1000, 1000, 'earth');
         land.fixedToCamera = true;
 
 		//	We've already preloaded our assets, so let's kick right into the Main Menu itself.
-        logo = this.add.sprite(0, 200, 'logo');
+        logo = this.add.sprite(100, 300, 'logo');
         logo.fixedToCamera = true;
 
 
@@ -31,8 +31,8 @@ TankGame.MainMenu.prototype = {
 	update: function () {
 
 		//	Do some nice funky main menu effect here
-        this.input.onDown.add(removeLogo, this);
         console.log("MainMenu.update function called");
+        this.input.onDown.add(this.removeLogo, this);
 
 	},
 
@@ -46,8 +46,12 @@ TankGame.MainMenu.prototype = {
 	},
     
     removeLogo: function() {
-        game.input.onDown.remove(removeLogo, this);
+        this.input.onDown.remove(this.removeLogo, this);
         logo.kill();
+
+        console.log("Logo removed attempting to transfer control to Game");
+		//	And start the actual game
+		this.state.start('Game');
     }
 
 };

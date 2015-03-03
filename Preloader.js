@@ -12,30 +12,15 @@ TankGame.Preloader.prototype = {
 
 	preload: function () {
 
-		//	These are the assets we loaded in Boot.js
-		//	A nice sparkly background and a loading progress bar
-		//this.background = this.add.sprite(0, 0, 'preloaderBackground');
-		//this.preloadBar = this.add.sprite(300, 400, 'preloaderBar');
-
-		//	This sets the preloadBar sprite as a loader sprite.
-		//	What that does is automatically crop the sprite from 0 to full-width
-		//	as the files below are loaded in.
-		// this.load.setPreloadSprite(this.preloadBar);
-
 		//	Here we load the rest of the assets our game needs.
-		//	As this is just a Project Template I've not provided these assets, swap them for your own.
-		// this.load.image('titlepage', 'images/title.jpg');
-		// this.load.atlas('playButton', 'images/play_button.png', 'images/play_button.json');
-		// this.load.audio('titleMusic', ['audio/main_menu.mp3']);
-		// this.load.bitmapFont('caslon', 'fonts/caslon.png', 'fonts/caslon.xml');
-		//	+ lots of other required assets here
+		//	+ lots of other required assets here - these are referenced in Boot.js
         console.log("Preloader.preload function called - trying to load our assets");
         // the preload progress bar
         this.preloadBar = this.add.sprite(this.world.centerX, this.world.centerY, 'preloadBar');
         this.preloadBar.anchor.setTo(0.5, 0.5);
         this.load.setPreloadSprite(this.preloadBar);
-        // the title text
-        this.titleText = this.add.image(this.world.centerX, this.world.centerY-220, 'titleimage');
+        // the title text - placement here does not seem to matter
+        this.titleText = this.add.image(this.world.centerX, this.world.centerY, 'titleimage');
         this.titleText.anchor.setTo(0.5, 0.5);
         
         this.load.atlas('enemy', 'assets/enemy-tanks.png', 'assets/tanks.json');

@@ -246,15 +246,15 @@ TankGame.Game.prototype = {
 			// EnemyTank = function(index, game, player, bullets)
 			
 			for (var i = 0; i < enemiesTotal; i++) {
-				enemies.push(new EnemyTank(i, game, tank, enemyBullets));
+				enemies.push(new EnemyTank(i, this, tank, enemyBullets));
 			}
 
 			//  A shadow below our (player) tank
-			shadow = game.add.sprite(0, 0, 'tank', 'shadow');
+			shadow = this.add.sprite(0, 0, 'tank', 'shadow');
 			shadow.anchor.setTo(0.5, 0.5);
 
 			//  Our bullet group
-			bullets = game.add.group();
+			bullets = this.add.group();
 			bullets.enableBody = true;
 			bullets.physicsBodyType = Phaser.Physics.ARCADE;
 			bullets.createMultiple(5, 'bullet', 0, false);
@@ -264,7 +264,7 @@ TankGame.Game.prototype = {
 			bullets.setAll('checkWorldBounds', true);
 
 			//  Explosion pool
-			explosions = game.add.group();
+			explosions = this.add.group();
 
 			for (var i = 0; i < 10; i++) {
 				var explosionAnimation = explosions.create(0, 0, 'kaboom', [ 0 ], false);
@@ -272,8 +272,8 @@ TankGame.Game.prototype = {
 				explosionAnimation.animations.add('kaboom');
 			}
 
-			this.tank.bringToTop();
-			this.turret.bringToTop();
+			tank.bringToTop();
+			turret.bringToTop();
 
     },
 

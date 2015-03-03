@@ -31,6 +31,250 @@ TankGame.Game.prototype = {
 
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
         console.log("Game.create function called");
+        // For now - we will define the enemy tank class here
+        // Probably better to have it in a file all its own
+        
+        // Lots of messy globals
+        
+        var TO_RADIANS = Math.PI / 180;
+		var TO_DEGREES = 180 / Math.PI;
+        
+        var land;
+
+		var shadow;
+		var tank;
+		var turret;
+
+		var enemies;
+		var enemyBullets;
+		var enemiesTotal = 0;
+		var enemiesAlive = 0;
+		var explosions;
+
+		var currentSpeed = 0;
+		var cursors;
+
+		var bullets;
+		var fireRate = 100;
+		var nextFire = 0;
+
+        
+        //  Resize our game world to be a 2000 x 2000 square
+        this.world.setBounds(-1000, -1000, 2000, 2000);
+
+        //  Our tiled scrolling background
+        land = this.add.tileSprite(0, 0,1000, 1000, 'earth');
+        land.fixedToCamera = true;
+
+        //  The base of our tank
+        tank = this.add.sprite(0, 0, 'tank', 'tank1');
+        tank.anchor.setTo(0.5, 0.5);
+        tank.animations.add('move', [ 'tank1', 'tank2', 'tank3', 'tank4', 'tank5', 'tank6' ], 20, true);
+
+        //  This will force it to decelerate and limit its speed
+        this.physics.enable(tank, Phaser.Physics.ARCADE);
+        tank.body.drag.set(0.3);
+        tank.body.maxVelocity.setTo(400, 400);
+        tank.body.collideWorldBounds = true;
+
+        //  Finally the turret that we place on-top of the tank body
+        turret = this.add.sprite(0, 0, 'tank', 'turret');
+        turret.anchor.setTo(0.3, 0.5);
+
+        //  The enemies bullet group
+        enemyBullets = this.add.group();
+        enemyBullets.enableBody = true;
+        enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
+        enemyBullets.createMultiple(100, 'bullet');
+
+        enemyBullets.setAll('anchor.x', 0.5);
+        enemyBullets.setAll('anchor.y', 0.5);
+        enemyBullets.setAll('outOfBoundsKill', true);
+        enemyBullets.setAll('checkWorldBounds', true);
+
+        
+        
+        
+		EnemyTank = function(index, game, player, bullets) {
+
+			// Randomizes the intial location of the enemy tank
+			//var x = game.world.randomX;
+			//var y = game.world.randomY;
+            
+            // Start the tanks along the bottom of the world, equally spaced
+			var y = 1000;
+            var x = index * 300 + -700;
+            console.log("Placing Tank #"+index+" X: "+x+", Y: "+y);
+
+			this.game = game;
+			// how much damage a tank can take before exploding.
+			// each shot does 1 damage
+			this.health = 5;
+			this.player = player;
+			this.bullets = bullets;
+			// this is the delay between firing - make this too low - and they will slaughter the player quickly!
+			this.fireRate = 3000;
+			this.nextFire = 0;
+			this.alive = true;
+            this.spottedPlayer = false;
+
+			this.shadow = game.add.sprite(x, y, 'enemy', 'shadow');
+			this.tank = game.add.sprite(x, y, 'enemy', 'tank1');
+			this.turret = game.add.sprite(x, y, 'enemy', 'turret');
+
+			this.shadow.anchor.set(0.5);
+			this.tank.anchor.set(0.5);
+			this.turret.anchor.set(0.3, 0.5);
+
+			this.tank.name = index.toString();
+			game.physics.enable(this.tank, Phaser.Physics.ARCADE);
+			this.tank.body.immovable = false;
+			this.tank.body.collideWorldBounds = true;
+			this.tank.body.bounce.setTo(1, 1);
+
+			this.tank.angle = game.rnd.angle();
+
+			var randomInitialSpeed =  (Math.floor(Math.random() * 500) + 1 )
+			game.physics.arcade.velocityFromRotation(this.tank.rotation, 0, this.tank.body.velocity);
+
+		};
+
+
+		// a very basic method that damages the enemy tank
+		// if the current tank is so damaged its health is 0, it is destroyed here
+		EnemyTank.prototype.damage = function(amount) {
+			this.health -= amount;
+
+			if (this.health <= 0) {
+				this.alive = false;
+				
+				this.shadow.kill();
+				this.tank.kill();
+				this.turret.kill();
+				
+				// true indicates the tank is dead - and signals we need to clean it up
+				return true;
+			}
+			// otherwise, the tank is still alive, so return false
+			return false;
+		}
+
+		// This method attempts to turn the tank in the opposite direction
+		// which will hopefully drive it away from whatever it collided with.
+		EnemyTank.prototype.turnAround = function(newSpeed) {
+			// set the velocity to what was passed in - newSpeed
+			// ignore new speed - and just randomize it
+			var newRandomSpeed =  (Math.floor(Math.random() * 250) + 250 )
+			game.physics.arcade.velocityFromRotation(this.tank.rotation, newRandomSpeed, this.tank.body.velocity);
+			var oldTankAngle = this.tank.angle;
+			// old tankAngle is in degrees, and can be anywhere between -180 and +180
+			// we'll subtract 180 from it - and if it is less than -180, we'll add 360 to it.
+			var newTankAngle = oldTankAngle - 180;
+			// adjust, if we went too far negative
+			if (newTankAngle < -180) {
+				newTankAngle += 360;
+			}
+			// assign the new angle  back to the tank
+			this.tank.angle = newTankAngle;
+			// ideally, this just spun the tank around
+		}
+
+		
+		EnemyTank.prototype.update = function() {
+
+			this.shadow.x = this.tank.x;
+			this.shadow.y = this.tank.y;
+			this.shadow.rotation = this.tank.rotation;
+
+			this.turret.x = this.tank.x;
+			this.turret.y = this.tank.y;
+			this.turret.rotation = this.game.physics.arcade.angleBetween(this.tank, this.player);
+
+			var distanceFromPlayer = this.game.physics.arcade.distanceBetween(this.tank, this.player);
+			//console.log("Tank Number: "+this.tank.name+" is this far from the player: "+distanceFromPlayer);
+            
+            // has the enemy tank spotted the player?
+            // assume that if the enemy is within 1000pix - it has spotted the player
+            if (this.tank.name == 0) {
+                // only report tank 0
+                if (distanceFromPlayer < 1000) {
+                    // console.log("Tank 0 is in of visual range of the player");
+                    if (this.tank.spottedPlayer == false) {
+                        console.log("Tank 0 has spotted the player - range: "+distanceFromPlayer);
+                        this.tank.spottedPlayer = true;
+                    } else {
+                        //console.log("this.tank.spottedPlayer must be true");
+                    }
+                } else {
+                    
+                    //console.log("Tank 0 is out of visual range of the player");
+                    
+                    if (this.tank.spottedPlayer == true) {
+                        console.log("Tank 0 has lost sight of the player");
+                        this.tank.spottedPlayer = false;
+                    }
+                }
+            }
+            
+
+			// the enemy tanks fire when they are within 300 pix of the player
+			if (distanceFromPlayer < 300) {
+				// player tank is in range
+				if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0) {
+					// basically checks to see if enough time has elapsed since the tank last fired
+					// and this.bullets.countDead() checks to see if there is at least one dead object in the group
+					this.nextFire = this.game.time.now + this.fireRate;
+
+					var bullet = this.bullets.getFirstDead();
+
+					bullet.reset(this.turret.x, this.turret.y);
+
+					// Enemy tank bullet speed - higher is faster
+					bullet.rotation = this.game.physics.arcade.moveToObject(bullet, this.player, 500);
+				}
+			}
+
+		};
+        
+        
+        // attempt to spawn enemies.
+            enemies = [];
+
+			enemiesTotal = 5;
+			enemiesAlive = 5;
+
+			// EnemyTank = function(index, game, player, bullets)
+			
+			for (var i = 0; i < enemiesTotal; i++) {
+				enemies.push(new EnemyTank(i, game, tank, enemyBullets));
+			}
+
+			//  A shadow below our (player) tank
+			shadow = game.add.sprite(0, 0, 'tank', 'shadow');
+			shadow.anchor.setTo(0.5, 0.5);
+
+			//  Our bullet group
+			bullets = game.add.group();
+			bullets.enableBody = true;
+			bullets.physicsBodyType = Phaser.Physics.ARCADE;
+			bullets.createMultiple(5, 'bullet', 0, false);
+			bullets.setAll('anchor.x', 0.5);
+			bullets.setAll('anchor.y', 0.5);
+			bullets.setAll('outOfBoundsKill', true);
+			bullets.setAll('checkWorldBounds', true);
+
+			//  Explosion pool
+			explosions = game.add.group();
+
+			for (var i = 0; i < 10; i++) {
+				var explosionAnimation = explosions.create(0, 0, 'kaboom', [ 0 ], false);
+				explosionAnimation.anchor.setTo(0.5, 0.5);
+				explosionAnimation.animations.add('kaboom');
+			}
+
+			this.tank.bringToTop();
+			this.turret.bringToTop();
+
     },
 
     update: function () {

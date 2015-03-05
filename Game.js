@@ -285,6 +285,17 @@ TankGame.Game.prototype = {
 
 			tank.bringToTop();
 			turret.bringToTop();
+            this.camera.follow(tank);
+			this.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
+			this.camera.focusOnXY(0, 0);
+
+			cursors = this.input.keyboard.createCursorKeys();
+			
+			// I Prefer the ASWD keys for driving
+			UpKey = this.input.keyboard.addKey(Phaser.Keyboard.W);
+			LeftKey = this.input.keyboard.addKey(Phaser.Keyboard.A);
+			RightKey = this.input.keyboard.addKey(Phaser.Keyboard.D);
+			DownKey = this.input.keyboard.addKey(Phaser.Keyboard.S);
 
     },
 
@@ -304,15 +315,15 @@ TankGame.Game.prototype = {
                 // original method - collide
                 // game.physics.arcade.collide(tank, enemies[i].tank);
                 // experimental method - overlap
-                this.physics.arcade.overlap(tank, enemies[i].tank, enemyCollidePlayer, null, this);
+                this.physics.arcade.overlap(tank, enemies[i].tank, this.enemyCollidePlayer, null, this);
                 // Try to make enemy tanks collide with each other
                 for (var j = 0; j < enemies.length; j++) {
                     // don't collide with ourself!
                     if (j != i) {
-                        this.physics.arcade.overlap(enemies[j].tank, enemies[i].tank, enemyCollideEnemy, null, this);
+                        this.physics.arcade.overlap(enemies[j].tank, enemies[i].tank, this.enemyCollideEnemy, null, this);
 						}
 					}
-					this.physics.arcade.overlap(bullets, enemies[i].tank, bulletHitEnemy, null, this);
+					this.physics.arcade.overlap(bullets, enemies[i].tank, this.bulletHitEnemy, null, this);
 					enemies[i].update();
 				}
 			}
@@ -325,20 +336,20 @@ TankGame.Game.prototype = {
 
 			if (cursors.up.isDown || UpKey.isDown) {
 				//  The speed we'll travel at
-				currentSpeed = 150;
+				this.currentSpeed = 150;
 			} else {
-				if (currentSpeed > 0) {
-					currentSpeed -= 4;
+				if (this.currentSpeed > 0) {
+					this.currentSpeed -= 4;
 				}
 			}
 
-			if (currentSpeed > 0) {
-				this.physics.arcade.velocityFromRotation(tank.rotation, currentSpeed, tank.body.velocity);
+			if (this.currentSpeed > 0) {
+				this.physics.arcade.velocityFromRotation(tank.rotation, this.currentSpeed, tank.body.velocity);
 			}
 			
 			// need to check and see if the tank (player) collided with any enemy tanks
             // if so - just stop the player.
-			this.physics.arcade.overlap(tank, enemies, playerHitEnemy, null, this);
+			this.physics.arcade.overlap(tank, enemies, this.playerHitEnemy, null, this);
 
 			
 			land.tilePosition.x = -this.camera.x;
@@ -356,7 +367,7 @@ TankGame.Game.prototype = {
 
 			if (this.input.activePointer.isDown) {
 				//  Boom!
-				fire();
+				this.fire();
 			}
         
     },
@@ -366,8 +377,106 @@ TankGame.Game.prototype = {
         // except we kill off a bullet.
         bullet.kill();
     },
-
     
+    
+    bulletHitEnemy: function(tank, bullet) {
+        // when an enemy tank is hit by the player
+        // we kill off the bullet
+        bullet.kill();
+        // and then decrement the tank's health
+        // enemies is an array
+        // tank.name is an index
+        // thus, enemies[tank.name is a pointer to the tank in the enemies array
+        var tankHealth = enemies[tank.name].health;
+        var tankName  = enemies[tank.name].tank.name;
+        console.log("Tank Id: "+tankName+" health (before) = "+tankHealth);
+        var destroyed = enemies[tank.name].damage(1);
+        // if 'destroyed' is true, the tank is out of health - so we destory it.
+        if (destroyed) {
+            var explosionAnimation = explosions.getFirstExists(false);
+            explosionAnimation.reset(tank.x, tank.y);
+            explosionAnimation.play('kaboom', 30, false, true);
+        }
+    },
+
+    enemyCollidePlayer: function(player, enemy) {
+        var tankName  = enemies[enemy.name].tank.name;
+
+        if (enemy.body.touching.up) {
+            //console.log("Tank Id: "+tankName+" going direction UP ran into the player tank");
+            // try to steer the tank directly away from the collision point at speed 100
+            enemies[enemy.name].turnAround(100);
+        }
+
+        if (enemy.body.touching.down) {
+            //console.log("Tank Id: "+tankName+" going direction DOWN ran into the player tank");
+            // try to steer the tank directly away from the collision point at speed 100
+            enemies[enemy.name].turnAround(100);
+        }
+
+        if (enemy.body.touching.left) {
+            //console.log("Tank Id: "+tankName+" going direction LEFT ran into the player tank");
+            // try to steer the tank directly away from the collision point at speed 100
+            enemies[enemy.name].turnAround(100);
+        }
+
+        if (enemy.body.touching.right) {
+            //console.log("Tank Id: "+tankName+" going direction RIGHT ran into the player tank");
+            // try to steer the tank directly away from the collision point at speed 100
+            enemies[enemy.name].turnAround(100);
+        }
+
+    },
+		
+    playerHitEnemy: function(tank, enemies) {
+        console.log("Detected a collision between the player and an enemy tank")
+    },
+
+    enemyCollideEnemy: function(enemy1, enemy2) {
+        var tankName1  = enemies[enemy1.name].tank.name;
+        var tankName2  = enemies[enemy2.name].tank.name;
+
+        if (enemy1.body.touching.up) {
+            //console.log("Tank "+tankName1+" going direction UP has collided with "+tankName2);
+            // try to steer the tank directly away from the collision point at speed 100
+            enemies[enemy1.name].turnAround(100);
+        }
+
+        if (enemy1.body.touching.down) {
+            //console.log("Tank "+tankName1+" going direction DOWN has collided with "+tankName2);
+            // try to steer the tank directly away from the collision point at speed 100
+            enemies[enemy1.name].turnAround(100);
+        }
+
+        if (enemy1.body.touching.left) {
+            //console.log("Tank "+tankName1+" going direction LEFT has collided with "+tankName2);
+            // try to steer the tank directly away from the collision point at speed 100
+            enemies[enemy1.name].turnAround(100);
+        }
+
+        if (enemy1.body.touching.right) {
+            //console.log("Tank "+tankName1+" going direction RIGHT has collided with "+tankName2);
+            // try to steer the tank directly away from the collision point at speed 100
+            enemies[enemy1.name].turnAround(100);
+        }
+    },
+    
+/*    
+    fire: function() {
+
+        if (this.time.now > this.nextFire && bullets.countDead() > 0) {
+            this.nextFire = this.time.now + this.fireRate;
+
+            var bullet = bullets.getFirstExists(false);
+
+            bullet.reset(turret.x, turret.y);
+
+            bullet.rotation = this,.physics.arcade.moveToPointer(bullet,
+                    1000, this.input.activePointer, 500);
+        }
+
+    },
+*/    
 
     quitGame: function (pointer) {
 

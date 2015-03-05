@@ -1,7 +1,7 @@
 
 TankGame.Game = function (game) {
 
-    //  When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
+    //  When a State is added to Phaser it automatically has the following properties set on it:
 
     this.game;      //  a reference to the currently running game (Phaser.Game)
     this.add;       //  used to add sprites, text, groups, etc (Phaser.GameObjectFactory)
@@ -23,9 +23,39 @@ TankGame.Game = function (game) {
     //  You can use any of these from any function within this State.
     //  But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
 
+    
+    // Lots of messy globals
+    var enemyBullets;
+
+    var TO_RADIANS = Math.PI / 180;
+    var TO_DEGREES = 180 / Math.PI;
+
+    var land;
+
+    var shadow;
+    var tank;
+    var turret;
+
+    var enemies;
+    var enemiesTotal = 0;
+    var enemiesAlive = 0;
+    var explosions;
+
+    var currentSpeed = 0;
+    var cursors;
+
+    var bullets;
+    var fireRate = 100;
+    var nextFire = 0;
+    
+    
+    
+
 };
 
 TankGame.Game.prototype = {
+
+    
 
     create: function () {
 
@@ -34,29 +64,6 @@ TankGame.Game.prototype = {
         // For now - we will define the enemy tank class here
         // Probably better to have it in a file all its own
         
-        // Lots of messy globals
-        
-        var TO_RADIANS = Math.PI / 180;
-		var TO_DEGREES = 180 / Math.PI;
-        
-        var land;
-
-		var shadow;
-		var tank;
-		var turret;
-
-		var enemies;
-		var enemyBullets;
-		var enemiesTotal = 0;
-		var enemiesAlive = 0;
-		var explosions;
-
-		var currentSpeed = 0;
-		var cursors;
-
-		var bullets;
-		var fireRate = 100;
-		var nextFire = 0;
 
         
         //  Resize our game world to be a 2000 x 2000 square
@@ -91,6 +98,7 @@ TankGame.Game.prototype = {
         enemyBullets.setAll('anchor.y', 0.5);
         enemyBullets.setAll('outOfBoundsKill', true);
         enemyBullets.setAll('checkWorldBounds', true);
+        console.log("enemyBullets defined here OK");
 
         
         
@@ -112,10 +120,12 @@ TankGame.Game.prototype = {
 			this.health = 5;
 			this.player = player;
 			this.bullets = bullets;
-			// this is the delay between firing - make this too low - and they will slaughter the player quickly!
+			// this is the delay between firing - make this too low
+            // and they will slaughter the player quickly!
 			this.fireRate = 3000;
 			this.nextFire = 0;
 			this.alive = true;
+            // whether or not the tank has spotted the player tank
             this.spottedPlayer = false;
 
 			this.shadow = game.add.sprite(x, y, 'enemy', 'shadow');
@@ -141,6 +151,7 @@ TankGame.Game.prototype = {
 
 
 		// a very basic method that damages the enemy tank
+        // 'amount' contains the amount of damage to apply against the tank's health
 		// if the current tank is so damaged its health is 0, it is destroyed here
 		EnemyTank.prototype.damage = function(amount) {
 			this.health -= amount;
@@ -279,9 +290,84 @@ TankGame.Game.prototype = {
 
     update: function () {
         console.log("Game.update function called");
-        //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
 
+        // check to see if any enemy bullet objects have hit the player tank
+        this.physics.arcade.overlap(enemyBullets, tank, this.bulletHitPlayer,null, this);
+
+        // assume all enemies are dead
+        console.log("Left off right about here");
+        enemiesAlive = 0;
+
+        for (var i = 0; i < enemies.length; i++) {
+            if (enemies[i].alive) {
+                enemiesAlive++;
+                // original method - collide
+                // game.physics.arcade.collide(tank, enemies[i].tank);
+                // experimental method - overlap
+                this.physics.arcade.overlap(tank, enemies[i].tank, enemyCollidePlayer, null, this);
+                // Try to make enemy tanks collide with each other
+                for (var j = 0; j < enemies.length; j++) {
+                    // don't collide with ourself!
+                    if (j != i) {
+                        this.physics.arcade.overlap(enemies[j].tank, enemies[i].tank, enemyCollideEnemy, null, this);
+						}
+					}
+					this.physics.arcade.overlap(bullets, enemies[i].tank, bulletHitEnemy, null, this);
+					enemies[i].update();
+				}
+			}
+
+			if (cursors.left.isDown || LeftKey.isDown) {
+				tank.angle -= 1;
+			} else if (cursors.right.isDown || RightKey.isDown) {
+				tank.angle += 1;
+			}
+
+			if (cursors.up.isDown || UpKey.isDown) {
+				//  The speed we'll travel at
+				currentSpeed = 150;
+			} else {
+				if (currentSpeed > 0) {
+					currentSpeed -= 4;
+				}
+			}
+
+			if (currentSpeed > 0) {
+				this.physics.arcade.velocityFromRotation(tank.rotation, currentSpeed, tank.body.velocity);
+			}
+			
+			// need to check and see if the tank (player) collided with any enemy tanks
+            // if so - just stop the player.
+			this.physics.arcade.overlap(tank, enemies, playerHitEnemy, null, this);
+
+			
+			land.tilePosition.x = -this.camera.x;
+			land.tilePosition.y = -this.camera.y;
+
+			//  Position all the parts and align rotations
+			shadow.x = tank.x;
+			shadow.y = tank.y;
+			shadow.rotation = tank.rotation;
+
+			turret.x = tank.x;
+			turret.y = tank.y;
+
+			turret.rotation = this.physics.arcade.angleToPointer(turret);
+
+			if (this.input.activePointer.isDown) {
+				//  Boom!
+				fire();
+			}
+        
     },
+    
+    bulletHitPlayer: function (tank, bullet) {
+        // at the moment, nothing happens when the player tank gets hit
+        // except we kill off a bullet.
+        bullet.kill();
+    },
+
+    
 
     quitGame: function (pointer) {
 

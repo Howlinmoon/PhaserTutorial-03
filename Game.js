@@ -64,6 +64,9 @@ TankGame.Game.prototype = {
         // For now - we will define the enemy tank class here
         // Probably better to have it in a file all its own
         
+        // try initializing this.nextFire
+        this.nextFire = 0;
+        
 
         
         //  Resize our game world to be a 2000 x 2000 square
@@ -306,7 +309,7 @@ TankGame.Game.prototype = {
         this.physics.arcade.overlap(enemyBullets, tank, this.bulletHitPlayer,null, this);
 
         // assume all enemies are dead
-        console.log("Left off right about here");
+        console.log("this.nextFire: "+this.nextFire);
         enemiesAlive = 0;
 
         for (var i = 0; i < enemies.length; i++) {
@@ -461,22 +464,26 @@ TankGame.Game.prototype = {
         }
     },
     
-/*    
     fire: function() {
 
+        console.log("Fire was called");
         if (this.time.now > this.nextFire && bullets.countDead() > 0) {
+            console.log("Time to fire");
             this.nextFire = this.time.now + this.fireRate;
 
             var bullet = bullets.getFirstExists(false);
 
             bullet.reset(turret.x, turret.y);
 
-            bullet.rotation = this,.physics.arcade.moveToPointer(bullet,
+            bullet.rotation = this.physics.arcade.moveToPointer(bullet,
                     1000, this.input.activePointer, 500);
+        } else {
+            console.log("Not time to fire for some reason");
+            console.log("bullest.countDead() :"+bullets.countDead());
+            console.log("this.time.now: "+this.time.now+", this.nextFire: "+this.nextFire);
         }
 
     },
-*/    
 
     quitGame: function (pointer) {
 

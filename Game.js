@@ -47,6 +47,7 @@ TankGame.Game = function (game) {
     var bullets;
     var fireRate = 100;
     var nextFire = 0;
+    var time;
     
     
     
@@ -63,10 +64,10 @@ TankGame.Game.prototype = {
         console.log("Game.create function called");
         // For now - we will define the enemy tank class here
         // Probably better to have it in a file all its own
-        
-        // try initializing this.nextFire
+
+        // try initializing this.nextFire and fireRate
         this.nextFire = 0;
-        
+        this.fireRate = 100;
 
         
         //  Resize our game world to be a 2000 x 2000 square
@@ -179,7 +180,7 @@ TankGame.Game.prototype = {
 			// set the velocity to what was passed in - newSpeed
 			// ignore new speed - and just randomize it
 			var newRandomSpeed =  (Math.floor(Math.random() * 250) + 250 )
-			game.physics.arcade.velocityFromRotation(this.tank.rotation, newRandomSpeed, this.tank.body.velocity);
+			this.physics.arcade.velocityFromRotation(this.tank.rotation, newRandomSpeed, this.tank.body.velocity);
 			var oldTankAngle = this.tank.angle;
 			// old tankAngle is in degrees, and can be anywhere between -180 and +180
 			// we'll subtract 180 from it - and if it is less than -180, we'll add 360 to it.
@@ -303,7 +304,8 @@ TankGame.Game.prototype = {
     },
 
     update: function () {
-        console.log("Game.update function called");
+        //console.log("Game.update function called");
+        //console.log("update this.time.now is supposedly: "+this.time.now);
 
         // check to see if any enemy bullet objects have hit the player tank
         this.physics.arcade.overlap(enemyBullets, tank, this.bulletHitPlayer,null, this);
@@ -465,22 +467,14 @@ TankGame.Game.prototype = {
     },
     
     fire: function() {
-
-        console.log("Fire was called");
         if (this.time.now > this.nextFire && bullets.countDead() > 0) {
-            console.log("Time to fire");
             this.nextFire = this.time.now + this.fireRate;
-
             var bullet = bullets.getFirstExists(false);
 
             bullet.reset(turret.x, turret.y);
 
             bullet.rotation = this.physics.arcade.moveToPointer(bullet,
                     1000, this.input.activePointer, 500);
-        } else {
-            console.log("Not time to fire for some reason");
-            console.log("bullest.countDead() :"+bullets.countDead());
-            console.log("this.time.now: "+this.time.now+", this.nextFire: "+this.nextFire);
         }
 
     },
